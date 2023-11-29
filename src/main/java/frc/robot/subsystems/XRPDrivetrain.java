@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.xrp.XRPGyro;
 import edu.wpi.first.wpilibj.xrp.XRPMotor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -29,6 +30,9 @@ public class XRPDrivetrain extends SubsystemBase {
   // Set up the differential drive controller
   private final DifferentialDrive m_diffDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
 
+  // Set up the XRPGyro
+  private final XRPGyro m_gyro = new XRPGyro();
+
   /** Creates a new XRPDrivetrain. */
   public XRPDrivetrain() {
     // Use inches as unit for encoder distances
@@ -41,21 +45,32 @@ public class XRPDrivetrain extends SubsystemBase {
   }
 
   public void arcadeDrive(double xaxisSpeed, double zaxisRotate) {
-    m_diffDrive.arcadeDrive(xaxisSpeed, zaxisRotate);
+    //TODO finish implementing the arcade drive using the given member objects
   }
 
   public void resetEncoders() {
-    m_leftEncoder.reset();
-    m_rightEncoder.reset();
+    //TODO reset the left and right encoders to 0
   }
 
   public double getLeftDistanceInch() {
-    return m_leftEncoder.getDistance();
+    //TODO get the left encoder distance in inches
+    // hint, look at what line 35/36 is doing
+    return 0;
   }
 
   public double getRightDistanceInch() {
-    return m_rightEncoder.getDistance();
+    //TODO get the right encoder distance in inches
+    // hint, look at what line 35/36 is doing
+    return 0;
   }
+
+  public double getGyroHeading() {
+    //TODO get the heading of the robot using the gyro
+    return 0;
+  }
+
+  // Neither of these periodic methods are needed, but you can add things to them
+  // to tinker
 
   @Override
   public void periodic() {

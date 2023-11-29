@@ -4,23 +4,24 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.XRPDrivetrain;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class ExampleCommand extends Command {
+public class DriveCommand extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final XRPDrivetrain m_subsystem;
+  //TODO create any needed objects ei. a drivetrain and xbox controller
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ExampleCommand(XRPDrivetrain subsystem) {
-    m_subsystem = subsystem;
+  public DriveCommand(XRPDrivetrain drivetrain, CommandXboxController controller) {
+    //TODO get any needed inputs to the command
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+    addRequirements();
   }
 
   // Called when the command is initially scheduled.
@@ -29,7 +30,9 @@ public class ExampleCommand extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    //TODO call the drivetrain drive method using the controller
+  }
 
   // Called once the command ends or is interrupted.
   @Override

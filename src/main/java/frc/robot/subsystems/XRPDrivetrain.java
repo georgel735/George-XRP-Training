@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.xrp.XRPGyro;
 import edu.wpi.first.wpilibj.xrp.XRPMotor;
@@ -33,6 +34,9 @@ public class XRPDrivetrain extends SubsystemBase {
   // Set up the XRPGyro
   private final XRPGyro m_gyro = new XRPGyro();
 
+  // Create a timer
+  private final Timer m_timer = new Timer();
+
   /** Creates a new XRPDrivetrain. */
   public XRPDrivetrain() {
     // Use inches as unit for encoder distances
@@ -40,12 +44,30 @@ public class XRPDrivetrain extends SubsystemBase {
     m_rightEncoder.setDistancePerPulse((Math.PI * WHEEL_DIAMETER_INCH) / COUNTS_PER_REVOLUTION);
     resetEncoders();
 
+    m_timer.reset();
+
     // Invert right side since motor is flipped
     m_rightMotor.setInverted(true);
   }
 
   public void arcadeDrive(double xaxisSpeed, double zaxisRotate) {
     m_diffDrive.arcadeDrive(xaxisSpeed, zaxisRotate);
+  }
+
+  public void driveForTime(double xSpeed, double zSpeed, double seconds) {
+    //TODO: finish the rest of this method used to draw shapes
+
+    // reset and start the timer
+    m_timer.reset();
+    m_timer.start();
+
+    // drive at the desired speed for so many seconds
+    while(m_timer.get() < seconds) {
+      arcadeDrive(xSpeed, zSpeed);
+    }
+
+    // stop motors when finished
+    arcadeDrive(0, 0);
   }
 
   public void resetEncoders() {
@@ -76,5 +98,21 @@ public class XRPDrivetrain extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
+  }
+
+  // rotates the robot a certain amount of degrees positive counterclockwise
+  public void rotateDegrees(double degrees) {
+    // find the new heading goal
+    double newHeading = getGyroHeading() + degrees;
+    double error = newHeading - getGyroHeading();
+
+    // while we're more than a degree away move towards the goal getting slower and slower
+    while (Math.abs(error) > 1) {
+      error = newHeading - getGyroHeading();
+      arcadeDrive(0, error * 0.5);
+    }
+
+    // stop when finished
+    arcadeDrive(0, 0);
   }
 }

@@ -44,7 +44,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
+    // This is what "command" or task will run when you start autonomous
+    // Change it to match whatever shape command you want to run
     return new InstantCommand();
   }
 }

@@ -11,11 +11,11 @@ import edu.wpi.first.wpilibj.xrp.XRPMotor;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class XRPDrivetrain extends SubsystemBase {
-  private static final double kGearRatio =
+  private static final double K_GEAR_RATIO =
       (30.0 / 14.0) * (28.0 / 16.0) * (36.0 / 9.0) * (26.0 / 8.0); // 48.75:1
-  private static final double kCountsPerMotorShaftRev = 12.0;
-  private static final double kCountsPerRevolution = kCountsPerMotorShaftRev * kGearRatio; // 585.0
-  private static final double kWheelDiameterInch = 2.3622; // 60 mm
+  private static final double COUNTS_PER_MOTOR_SHAFT_REV = 12.0;
+  private static final double COUNTS_PER_REVOLUTION = COUNTS_PER_MOTOR_SHAFT_REV * K_GEAR_RATIO; // 585.0
+  private static final double WHEEL_DIAMETER_INCH = 2.3622; // 60 mm
 
   // The XRP has the left and right motors set to
   // channels 0 and 1 respectively
@@ -36,8 +36,8 @@ public class XRPDrivetrain extends SubsystemBase {
   /** Creates a new XRPDrivetrain. */
   public XRPDrivetrain() {
     // Use inches as unit for encoder distances
-    m_leftEncoder.setDistancePerPulse((Math.PI * kWheelDiameterInch) / kCountsPerRevolution);
-    m_rightEncoder.setDistancePerPulse((Math.PI * kWheelDiameterInch) / kCountsPerRevolution);
+    m_leftEncoder.setDistancePerPulse((Math.PI * WHEEL_DIAMETER_INCH) / COUNTS_PER_REVOLUTION);
+    m_rightEncoder.setDistancePerPulse((Math.PI * WHEEL_DIAMETER_INCH) / COUNTS_PER_REVOLUTION);
     resetEncoders();
 
     // Invert right side since motor is flipped
@@ -45,28 +45,24 @@ public class XRPDrivetrain extends SubsystemBase {
   }
 
   public void arcadeDrive(double xaxisSpeed, double zaxisRotate) {
-    //TODO finish implementing the arcade drive using the given member objects
+    m_diffDrive.arcadeDrive(xaxisSpeed, zaxisRotate);
   }
 
   public void resetEncoders() {
-    //TODO reset the left and right encoders to 0
+    m_leftEncoder.reset();
+    m_rightEncoder.reset();
   }
 
   public double getLeftDistanceInch() {
-    //TODO get the left encoder distance in inches
-    // hint, look at what line 35/36 is doing
-    return 0;
+    return m_leftEncoder.getDistance();
   }
 
   public double getRightDistanceInch() {
-    //TODO get the right encoder distance in inches
-    // hint, look at what line 35/36 is doing
-    return 0;
+    return m_rightEncoder.getDistance();
   }
 
   public double getGyroHeading() {
-    //TODO get the heading of the robot using the gyro
-    return 0;
+    return m_gyro.getAngle();
   }
 
   // Neither of these periodic methods are needed, but you can add things to them

@@ -11,32 +11,38 @@ import edu.wpi.first.wpilibj2.command.Command;
 /** An example command that uses an example subsystem. */
 public class DriveCommand extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  //TODO create any needed objects ei. a drivetrain and xbox controller
+  private final XRPDrivetrain m_drivetrain;
+  private final CommandXboxController m_driverController;
 
   /**
-   * Creates a new ExampleCommand.
+   * Creates a new DriveCommand.
    *
-   * @param subsystem The subsystem used by this command.
+   * @param drivetrain The drivetrain used by this command.
+   * @param controller The xbox controller used by this command
    */
   public DriveCommand(XRPDrivetrain drivetrain, CommandXboxController controller) {
-    //TODO get any needed inputs to the command
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements();
+    m_drivetrain = drivetrain;
+    m_driverController = controller;
+    addRequirements(m_drivetrain);
   }
 
-  // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    // Called when the command is initially scheduled.
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //TODO call the drivetrain drive method using the controller
+    m_drivetrain.arcadeDrive(-m_driverController.getLeftY(), -m_driverController.getRightX());
   }
 
-  // Called once the command ends or is interrupted.
+
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    // Called once the command ends or is interrupted.
+  }
 
   // Returns true when the command should end.
   @Override

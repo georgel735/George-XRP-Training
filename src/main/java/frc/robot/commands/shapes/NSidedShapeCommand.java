@@ -22,12 +22,8 @@ public class NSidedShapeCommand extends Command {
   @Override
   public void execute() {
     // Repeat the same motion once for each side
-    for (int i = 0; i < m_sides; i++) {
-      // drive at half speed for 1 second
-      m_drivetrain.driveForTime(0.5, 0.0, 1);
+    for (int i = 0; i < /* insert something here */; i++) {
 
-      // turn 120 degrees (360 / 3 = 120)
-      m_drivetrain.rotateDegrees(360.0 / m_sides);
     }
 
     // Stop command

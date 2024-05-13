@@ -20,12 +20,8 @@ public class TriangleCommand extends Command {
   @Override
   public void execute() {
     // Repeat the same motions 3 times (for a triangle)
-    for (int i = 0; i < 3; i++) {
-      // drive at half speed for 1 second
-      m_drivetrain.driveForTime(0.5, 0.0, 1);
-
-      // turn 120 degrees (360 / 3 = 120)
-      m_drivetrain.rotateDegrees(120);
+    for (int i = 0; i < /* insert something here */; i++) {
+      // Drive then turn
     }
 
     // Stop command

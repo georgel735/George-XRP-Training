@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -39,6 +40,8 @@ public class RobotContainer {
     m_skibidiChooser.addOption("CURSE OF THE NILE",
             new DriveForTimeCommand(m_drivetrain, 2.0, 1.0, 1.0));
     m_skibidiChooser.addOption("YESSSSS", m_drivetrain.avoidWallsFactory());
+    m_skibidiChooser.addOption("Auto2",
+            AutoBuilder.buildAuto("Auto2"));
 
     SmartDashboard.putData("WHAT THE SUS!!!!!",m_skibidiChooser);
   }

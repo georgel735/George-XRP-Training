@@ -1,7 +1,18 @@
 {
   "NTProvider": {
     "types": {
-      "/FMSInfo": "FMSInfo"
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/WHAT THE SUS!!!!!": "String Chooser"
+    },
+    "windows": {
+      "/SmartDashboard/WHAT THE SUS!!!!!": {
+        "window": {
+          "visible": true
+        }
+      }
     }
+  },
+  "NetworkTables Info": {
+    "visible": true
   }
 }

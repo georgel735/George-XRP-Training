@@ -4,12 +4,20 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.xrp.XRPGyro;
 import edu.wpi.first.wpilibj.xrp.XRPMotor;
+import edu.wpi.first.wpilibj.xrp.XRPRangefinder;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.DriveForTimeCommand;
 
 public class XRPDrivetrain extends SubsystemBase {
   private static final double K_GEAR_RATIO =
@@ -30,9 +38,14 @@ public class XRPDrivetrain extends SubsystemBase {
 
   // Set up the differential drive controller
   private final DifferentialDrive m_diffDrive = new DifferentialDrive(m_leftMotor, m_rightMotor);
+  //PID
+  private final PIDController m_PID = new PIDController(0,0,0);
 
   // Set up the XRPGyro
   private final XRPGyro m_gyro = new XRPGyro();
+
+  // Set up the XRPRangeFinder
+  private final XRPRangefinder m_rangefinder = new XRPRangefinder();
 
   // Create a timer
   private final Timer m_timer = new Timer();
@@ -43,6 +56,9 @@ public class XRPDrivetrain extends SubsystemBase {
     m_leftEncoder.setDistancePerPulse((Math.PI * WHEEL_DIAMETER_INCH) / COUNTS_PER_REVOLUTION);
     m_rightEncoder.setDistancePerPulse((Math.PI * WHEEL_DIAMETER_INCH) / COUNTS_PER_REVOLUTION);
     resetEncoders();
+
+    m_PID.setTolerance(7.5);
+    m_PID.enableContinuousInput(0,360);
 
     m_timer.reset();
 
@@ -70,12 +86,34 @@ public class XRPDrivetrain extends SubsystemBase {
   public double getGyroHeading() {
     return m_gyro.getAngle();
   }
+  public double getRangeInches() {
+    return m_rangefinder.getDistanceInches();
+  }
+  public Command avoidWallsFactory() {
+    return new ConditionalCommand(
+            new DriveForTimeCommand(this, 1.0, 1.0, 0.0).withTimeout(0.2),
+            turnForDegreesFactory(90.0),
+            () -> getRangeInches() >= 25.0
+    ).repeatedly();
 
+  }
+
+  public Command turnForDegreesFactory(double degrees) {
+    final double setPoint = degrees + getGyroHeading();
+    return run(() -> {
+      double output = m_PID.calculate(getGyroHeading(),setPoint);
+      arcadeDrive(0.0, output);
+    }).until(m_PID::atSetpoint);
+  }
   // Neither of these periodic methods are needed, but you can add things to them
   // to tinker
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Robot Heading", getGyroHeading());
+    SmartDashboard.putNumber("Distance (in.)", getRangeInches());
+    SmartDashboard.putNumber("PID Setpoint", m_PID.getSetpoint());
+    SmartDashboard.putNumber("Measurement", getGyroHeading());
     // This method will be called once per scheduler run
   }
 
@@ -84,19 +122,6 @@ public class XRPDrivetrain extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
   }
 
-  // rotates the robot a certain amount of degrees positive counterclockwise
-  public void rotateDegrees(double degrees) {
-    // find the new heading goal
-    double newHeading = getGyroHeading() + degrees;
-    double error = newHeading - getGyroHeading();
 
-    // while we're more than a degree away move towards the goal getting slower and slower
-    while (Math.abs(error) > 1) {
-      error = newHeading - getGyroHeading();
-      arcadeDrive(0, error * 0.5);
-    }
-
-    // stop when finished
-    arcadeDrive(0, 0);
   }
-}
+
